@@ -66,6 +66,26 @@
             <div class="form-group">
                 <input v-model="form.password" id="password" class="form-control" type="password" placeholder="Password" name="password" :class="{'is-valid' : form.errors.has('password')}">
                 <has-error :form="form" field="password"></has-error>
+            </div>   
+
+            <div class="form-group">
+                <input v-model="form.email" id="email" class="form-control" type="email" placeholder="Email Address" name="email" :class="{'is-valid' : form.errors.has('email')}">
+                <has-error :form="form" field="email"></has-error>
+            </div>  
+
+            <div class="form-group">
+                <select v-model="form.usertype" id="usertype" class="form-control" name="text" usertype="usertype" :class="{'is-valid' : form.errors.has('usertype')}">
+                    <option id="">Select User Role</option>
+                    <option id="admin">Admin</option>
+                    <option id="user">Standard User</option>
+                    <option id="author">Author</option>
+                </select>
+                <has-error :form="form" field="usertype"></has-error>
+            </div>    
+
+            <div class="form-group">
+                <textarea v-model="form.bio" id="bio" class="form-control" placeholder="Short Bio (optional)" name="bio" :class="{'is-valid' : form.errors.has('bio')}"></textarea>
+                <has-error :form="form" field="bio"></has-error>
             </div>            
         </form>
       </div>
