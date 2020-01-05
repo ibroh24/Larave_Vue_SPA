@@ -11,11 +11,15 @@
 |
 */
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+// dynamic path
+Route::get('{path}', 'HomeController@index')->where('path', '([A-Za-z0-9\-\/]+)');
