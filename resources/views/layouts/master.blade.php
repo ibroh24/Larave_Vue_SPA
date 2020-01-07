@@ -145,7 +145,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
+          {{-- our components are injected here --}}
             <router-view></router-view>
+            {{-- the progress bar --}}
+            <vue-progress-bar></vue-progress-bar>
         </div>
     </div>
 </div>

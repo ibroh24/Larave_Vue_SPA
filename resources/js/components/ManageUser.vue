@@ -18,18 +18,18 @@
                       <th>ID</th>
                       <th>Username</th>
                       <th>Email</th>
-                      <!-- <th>Date</th> -->
+                      <th>Registered Date</th>
                       <th>Type</th>
                       <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>657</td>
-                      <td>Bob Doe</td>
-                      <td>admin@g.com</td>
-                      
-                      <td><span class="tag tag-primary">User</span></td>
+                    <tr v-for="user in users" v-bind:key="user.id">
+                      <td>{{user.id}}</td>
+                      <td>{{user.name | caseUpper}}</td>
+                      <td>{{user.email}}</td>
+                      <td>{{user.created_at | fullDate}}</td>
+                      <td>{{user.type | caseUpper}}</td>
                       <td>
                           <a href="#" class="btn btn-primary btn-sm"><span class="fas fa-edit"></span></a> | 
                           <a href="#" class="btn btn-danger btn-sm "><span class="fas fa-trash"></span></a>
@@ -55,8 +55,9 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+
       <div class="modal-body">
-        <form action="" method="post">
+        <form action="" @submit.prevent="addUser" method="post" autocomplete="off">
 
             <div class="form-group">
                 <input v-model="form.name" id="name" class="form-control" type="text" placeholder="Name" name="name" :class="{'is-valid' : form.errors.has('name')}">
@@ -74,24 +75,26 @@
             </div>  
 
             <div class="form-group">
-                <select v-model="form.usertype" id="usertype" class="form-control" name="text" usertype="usertype" :class="{'is-valid' : form.errors.has('usertype')}">
-                    <option id="">Select User Role</option>
-                    <option id="admin">Admin</option>
-                    <option id="user">Standard User</option>
-                    <option id="author">Author</option>
+                <select v-model="form.type" id="type" class="form-control" name="type" :class="{'is-valid' : form.errors.has('type')}" >
+                    <option value="">Select User Role</option>
+                    <option value="admin">Admin</option>
+                    <option value="user">Standard User</option>
+                    <option value="author">Author</option>
                 </select>
-                <has-error :form="form" field="usertype"></has-error>
+                <has-error :form="form" field="type"></has-error>
             </div>    
 
             <div class="form-group">
                 <textarea v-model="form.bio" id="bio" class="form-control" placeholder="Short Bio (optional)" name="bio" :class="{'is-valid' : form.errors.has('bio')}"></textarea>
                 <has-error :form="form" field="bio"></has-error>
-            </div>            
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger fas fa-window-close" data-dismiss="modal"> Close</button>
-        <button type="button" class="btn btn-primary fas fa-user"> Create User</button>
+            </div>  
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger fas fa-window-close" data-dismiss="modal"> Close</button>
+                <button type="submit" class="btn btn-primary fas fa-user"> Create User</button>
+            </div>
+
+          </form>         
       </div>
     </div>
   </div>
@@ -115,21 +118,37 @@
                     name : '',
                     email : '',
                     password: '',
-                    usertype: '',
+                    type: '',
                     image: '',
                     bio: ''
                 }),
-                users: []
-
+                users : []
             }
         },
         created(){
-
+          this.getUsers();
         },
-        methods:{
-            getUsers(){
-                fetch('')
-
+        methods: {
+            addUser(){
+              // this has been injected in master template and imported into app.js
+              this.$Progress.start();
+              // console.log("here");
+              this.form.post('api/user');
+              this.$Progress.finish();
+              this.getUsers();
+            },
+            getUsers(data){
+              // data = this.form.get('api/user');
+              // u can also use:
+              //  axios.get('api/user')
+              // .then(({data}) =>(this.users = data, console.log(this.users)));
+              fetch('api/user')
+              .then(res => res.json())
+                .then(res => {
+                  // console.log(res.data);
+                  this.users = res.data;
+                  // console.log(this.users);
+                }).catch(err => console.log(err))
             }
         }
     }
